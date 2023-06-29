@@ -1,0 +1,31 @@
+{
+  "name": "node-amqp",
+  "version": "master",
+  "description": "This project is a sample of a node application using amqp protocol",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "LOG_LEVEL=OFF node --experimental-vm-modules ./node_modules/jest/bin/jest.js --runInBand --silent",
+    "native": "npm run transpile && npm run compile",
+    "transpile": "esbuild --platform=node --bundle --outfile=bin/native.cjs src/server.js",
+    "compile": "pkg --no-bytecode --public --targets node16-linux-x64 --public-packages '*' --compress brotli --out-path bin bin/native.cjs"
+  },
+  "author": "Valentin CONAN <valentin.conan@gmail.com>",
+  "devDependencies": {
+
+    "jest": "28.1.0",
+    "jest-junit": "13.2.0",
+    "pkg": "5.8.1",
+    "esbuild": "0.17.11",
+    "supertest": "6.2.3"
+  },
+  "dependencies": {
+    "npm": "8.11.0",
+    "log4js": "6.4.7",
+    "cors": "2.8.5",
+    "express": "4.18.1",
+    "amqplib": "0.10.3"
+  },
+  "pre-commit": []
+}
