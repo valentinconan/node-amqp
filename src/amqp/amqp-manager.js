@@ -6,7 +6,7 @@ import Logger from "../utils/logger.js";
 
 const LOGGER = Logger.getLogger("AmqpManager");
 const EventEmitter = events.EventEmitter;
-let connectionNbTry = 0;
+
 const maxRetry = Environment.getNumber(Constants.ENV_KEYS.RABBITMQ.CONNECT_MAX_RETRY, 10);
 const interval = Environment.getNumber(Constants.ENV_KEYS.RABBITMQ.CONNECT_WAIT_FOR_RETRY, 15000);
 
@@ -61,7 +61,7 @@ class AmqpManager {
      *
      * @returns {Promise<*>}
      */
-    async connect() {
+    async connect(connectionNbTry=0) {
         try {
             connectionNbTry++;
             this.connection = await this.getAmqp().connect(this.getAmqpUrl());
@@ -93,7 +93,7 @@ class AmqpManager {
                     }, interval);
                 });
 
-                return this.connect();
+                return this.connect(connectionNbTry);
             } else {
                 LOGGER.fatal('Unable to connect rabbitMQ', error);
 
