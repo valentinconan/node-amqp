@@ -1,0 +1,47 @@
+version: '2.3'
+services:
+  node-amqp:
+    hostname: node-amqp
+    image: valentinconan/node-amqp:master
+    restart: unless-stopped
+    env_file:
+      - env/default.env
+    healthcheck:
+      test: wget -O /dev/null http://localhost:3000/amqp/ping || exit 1
+      interval: 1s
+      timeout: 5s
+      retries: 10
+    ports:
+      - 3000:3000
+    networks:
+      - amqp-network
+  node-amqp-native:
+    hostname: node-amqp-native
+    image: valentinconan/node-amqp-native:master
+    restart: unless-stopped
+    env_file:
+      - env/default.env
+    healthcheck:
+      test: wget -O /dev/null http://localhost:3000/amqp/ping || exit 1
+      interval: 1s
+      timeout: 5s
+      retries: 10
+    ports:
+      - 3001:3000
+    networks:
+      - amqp-network
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    hostname: rabbitmq
+    ports:
+        - 5672:5672
+        - 15672:15672
+    volumes:
+        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+        - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+        - amqp-network
+
+networks:
+  amqp-network:
+    driver: bridge
